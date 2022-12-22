@@ -26,6 +26,7 @@ def main():
                     name = strs[1]
                     cmd.touch(name,size) 
     print(f"The sum of the sizes of at most 100000 is {dir.sum_sizes_lte(100000)}")
+    print(f"The size of the directory to delete is {dir.search_dir_for_update()}")
     return 0
 
 if __name__ == "__main__":

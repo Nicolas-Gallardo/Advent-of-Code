@@ -25,6 +25,8 @@ class Directory:
         self.name = name
         self.size = 0
         self.sub = {"..":parent} # for subdirectories or files inside in this directory
+        self.disk_space = 70000000
+        self.space_req_upd = 30000000
 
     def get_size(self):
         return self.size
@@ -48,6 +50,21 @@ class Directory:
                     sum += self.sub[i].size
                 sum += self.sub[i].sum_sizes_lte(size)
         return sum
+
+    def search_dir_for_update(self, unused_space = 0, dir_sizes = []):
+        if unused_space == 0:
+            unused_space = self.disk_space - self.size
+        if len(self.sub) == 1:
+            return
+        for i in self.sub:
+            if not i == ".." and type(self.sub[i]) == Directory:
+                dir_sizes.append(self.sub[i].size)
+                self.sub[i].search_dir_for_update(unused_space,dir_sizes)
+        dir_sizes.sort()
+        for i in dir_sizes:
+            if unused_space + i >= self.space_req_upd:
+                return i        
+
 
     def get_sub(self):
         return deepcopy(self.sub)
